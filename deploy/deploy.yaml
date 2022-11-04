@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo
+  labels:
+    app: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo
+  template:
+    metadata:
+      labels:
+        app: demo
+    spec:
+      serviceAccountName: capturer
+      containers:
+      - name: demo
+        image: localhost:5001/demo
+        imagePullPolicy: Always
+        env:
+        - name: AWS_ENDPOINT
+          value: "http://localstack:4566"
+        - name: AWS_ACCESS_KEY_ID
+          value: "test"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "test"
+        - name: AWS_DEFAULT_REGION
+          value: "us-east-1"  
+      - name: capturer
+        image: localhost:5001/capturer
+        imagePullPolicy: Always
